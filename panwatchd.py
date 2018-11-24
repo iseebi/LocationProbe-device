@@ -5,6 +5,8 @@ import subprocess
 import time
 import os
 import sys
+from os import path
+
 import yaml
 import pubsub
 import var_protection
@@ -21,7 +23,7 @@ def parse_args():
 
 
 def load_env_yaml(input_args):
-    env_file = input_args.env if 'env' in input_args else 'env.yaml'
+    env_file = input_args.env if input_args is not None else path.dirname(__file__) + '/env.yaml'
     with open(env_file) as f:
         data = yaml.load(f)
     return data
@@ -47,6 +49,7 @@ def check_pan_status():
 
 def on_connected():
     logging.info('on_connected')
+    # TODO: 時刻合わせ
     if pubsub.register_if_needed():
         pubsub.connect()
 

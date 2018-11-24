@@ -115,12 +115,10 @@ def create_jwt():
 def connect():
     global mqtt_client
     logging.info('MQTT connecting: {}:{} / {}'.format(mqtt_host['host'], mqtt_host['port'], device['topic']))
-    password_jwt = create_jwt()
-    logging.debug(password_jwt)
 
     roots_pem_path = path.dirname(__file__) + '/roots.pem'
     mqtt_client = mqtt.Client(client_id=device['topic'])
-    mqtt_client.username_pw_set(username='unused', password=password_jwt)
+    mqtt_client.username_pw_set(username='unused', password=create_jwt())
     mqtt_client.tls_set(ca_certs=roots_pem_path, tls_version=ssl.PROTOCOL_TLSv1_2)
 
     mqtt_client.on_connect = on_connect
