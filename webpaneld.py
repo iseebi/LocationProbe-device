@@ -5,12 +5,11 @@ import logging
 import sys
 import urllib
 import urllib.request
+from os import path
 
 import jwt
 import yaml
 from flask import Flask, render_template, request
-
-
 
 title = 'Iseteki CarRouter'
 app = Flask(__name__)
@@ -25,7 +24,7 @@ def parse_args():
 
 
 def load_env_yaml(input_args):
-    env_file = input_args.env if input_args is not None else path.dirname(__file__) + '/env.yaml'
+    env_file = input_args.env if input_args.env is not None else path.dirname(__file__) + '/env.yaml'
     with open(env_file) as f:
         data = yaml.load(f)
     return data
