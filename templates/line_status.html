@@ -1,0 +1,12 @@
+{% if line_status %}
+    <p class="p-3">接続済みです</p>
+{% else %}
+    <p class="p-3">未接続・認証切れです</p>
+    <form action="{{ api }}" method="post">
+        <input type="hidden" name="authorization" value="{{ auth_token }}" />
+        <input type="hidden" name="callback_uri" value="{{ callback_uri }}" />
+        <p class="p-3">
+            <input type="submit" class="btn btn-info" value="接続する" />
+        </p>
+    </form>
+{% endif %}

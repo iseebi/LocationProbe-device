@@ -2,3 +2,4 @@ pyjwt==1.6.4
 pyyaml==3.13
 paho-mqtt==1.4.0
 cryptography
+flask

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>サービス連携メニュー</h2>
+    <div>
+        <h3>LINE Notify</h3>
+        <div id="line" class="border rounded">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                     role="progressbar" style="width: 100%"
+                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+
+
+        <h3>Locapos</h3>
+        <div class="border rounded">
+            <p class="p-3">準備中</p>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $.get('/services/line/status', function(data) {
+            $('#line').html(data);
+        });
+    });
+    </script>
+{% endblock %}
