@@ -1,0 +1,4 @@
+devenv/*
+__pycache__/*
+*.pyc
+.idea/*
