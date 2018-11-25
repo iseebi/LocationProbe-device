@@ -7,8 +7,7 @@ import sys
 from os import path
 
 import yaml
-import pubsub
-import var_protection
+from probe import pubsub, var_protection
 
 last_pan_status = 2
 
@@ -104,6 +103,7 @@ def setup_debug_logger():
         logger.setLevel(logging.DEBUG)
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(logging.DEBUG)
+        # noinspection SpellCheckingInspection
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         logger.addHandler(handler)

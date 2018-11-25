@@ -10,7 +10,7 @@ import urllib.request
 import jwt
 import paho.mqtt.client as mqtt
 
-import var_protection
+from probe import var_protection
 
 mqtt_client = None
 public_key = None
