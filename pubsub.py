@@ -94,11 +94,8 @@ def create_jwt():
     algorithm = 'RS256'
 
     token = {
-        # The time that the token was issued at
         'iat': datetime.datetime.utcnow(),
-        # The time the token expires.
         'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-        # The audience field should always be set to the GCP project id.
         'aud': project_id
     }
 

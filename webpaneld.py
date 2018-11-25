@@ -11,7 +11,7 @@ import jwt
 import yaml
 from flask import Flask, render_template, request
 
-title = 'Iseteki CarRouter'
+system_name = 'Iseteki CarProbe'
 app = Flask(__name__)
 
 
@@ -54,8 +54,8 @@ def generate_jwt(device):
     return auth_token.decode('utf-8')
 
 
-def get_line_authorization_status(device, auth_token):
-    url = '{}/v1/devices/{}/connections/line'.format(api, device['device_key'])
+def get_authorization_status(service, auth_token):
+    url = '{}/v1/connections/{}'.format(api, service)
     headers = {
         'Authorization': 'Bearer {}'.format(auth_token)
     }
@@ -69,37 +69,46 @@ def get_line_authorization_status(device, auth_token):
             body = json.loads(result.decode('utf-8'))
             return body['connected']
     except OSError:
-        logging.warning('registration failre by api (URLError)')
+        logging.warning('{} status indication failre by api (OSError)'.format(service))
         return False
     except TypeError:
-        logging.warning('registration failre by api (TypeError)')
+        logging.warning('{} status indication failre by api (TypeError)'.format(service))
         return False
 
 
-@app.route('/services')
-def services():
-    return render_template('services.html', title=title)
-
-
-@app.route('/services/line/status')
-def line_status():
+def process_status_fragment(service, template):
     device = load_device_file()
     auth_token = generate_jwt(device)
-    status = get_line_authorization_status(device, auth_token)
+    status = get_authorization_status(service, auth_token)
     callback_uri = '{}services'.format(request.url_root)
-    api_url = '{}/oauth/line-notify/redirect'.format(api)
+    api_url = '{}/oauth/{}/redirect'.format(api, service)
     return render_template(
-        'line_status.html',
-        title=title,
-        line_status=status,
+        template,
+        system_name=system_name,
+        status=status,
         auth_token=auth_token,
         callback_uri=callback_uri,
         api=api_url)
 
 
+@app.route('/services')
+def services():
+    return render_template('services.html', system_name=system_name)
+
+
+@app.route('/services/line-notify/status')
+def line_notify_status():
+    return process_status_fragment('line-notify', 'line_notify_status.html')
+
+
+@app.route('/services/locapos/status')
+def locapos_status():
+    return process_status_fragment('locapos', 'locapos_status.html')
+
+
 @app.route('/')
 def index():
-    return render_template('index.html', title=title)
+    return render_template('index.html', system_name=system_name)
 
 
 def setup_debug_logger():
@@ -108,6 +117,7 @@ def setup_debug_logger():
         logger.setLevel(logging.DEBUG)
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(logging.DEBUG)
+        # noinspection SpellCheckingInspection
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         logger.addHandler(handler)
