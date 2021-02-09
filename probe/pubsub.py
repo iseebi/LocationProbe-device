@@ -38,6 +38,7 @@ def read_public_key():
 def register():
     logging.info('begin device registration')
     url = api + '/v1/devices'
+    logging.info(url)
     data = {
         'public_key': read_public_key()
     }
@@ -54,7 +55,7 @@ def register():
             write_device_file(body)
         return True
     except OSError:
-        logging.warning('registration failre by api (URLError)')
+        logging.warning('registration failre by api (OSError)')
         return False
     except TypeError:
         logging.warning('registration failre by api (TypeError)')
@@ -125,7 +126,7 @@ def connect():
 
     mqtt_client.connect(mqtt_host['host'], mqtt_host['port'], keepalive=60)
     mqtt_client.subscribe('/devices/{}/config'.format(device['device_id']), qos=1)
-    mqtt_client.publish('/devices/{}/state'.format(device['device_id']), payload='{"state":"connect"}', qos=1)
+    mqtt_client.publish('/devices/{}/events'.format(device['device_id']), payload='{"event":"connect"}', qos=1)
 
 
 def loop():

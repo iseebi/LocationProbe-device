@@ -10,6 +10,7 @@ import yaml
 from probe import pubsub, var_protection
 
 last_pan_status = 2
+last_pubsub_status = 0
 
 
 def parse_args():
@@ -46,10 +47,13 @@ def check_pan_status():
 
 
 def on_connected():
+    global last_pubsub_status
     logging.info('on_connected')
     # TODO: 時刻合わせ
-    if pubsub.register_if_needed():
-        pubsub.connect()
+    if last_pubsub_status == 0:
+        if pubsub.register_if_needed():
+            last_pubsub_status = 1
+            pubsub.connect()
 
 
 def on_disconnected():
@@ -79,8 +83,8 @@ def main_unit():
 
             pubsub.loop()
 
-        except:
-            pass
+        except Exception as err:
+            logging.warning('loop catch err {}'.format(err))
 
         finally:
             time.sleep(1)

@@ -8,6 +8,7 @@ import urllib.request
 from os import path
 
 import jwt
+import wsgiserver
 import yaml
 from flask import Flask, render_template, request
 
@@ -93,7 +94,7 @@ def process_status_fragment(service, template):
 
 @app.route('/services')
 def services():
-    return render_template('services.html', system_name=system_name)
+    return render_template('services.html', system_name=system_name, active_function='services')
 
 
 @app.route('/services/line-notify/status')
@@ -106,9 +107,14 @@ def locapos_status():
     return process_status_fragment('locapos', 'locapos_status.html')
 
 
+@app.route('/settings')
+def settings():
+    return render_template('settings.html', system_name=system_name, active_function='settings')
+
+
 @app.route('/')
 def index():
-    return render_template('index.html', system_name=system_name)
+    return render_template('index.html', system_name=system_name, active_function='home')
 
 
 def setup_debug_logger():
@@ -129,4 +135,6 @@ if __name__ == "__main__":
     keydir = env['keydir']
     api = env['api']
     setup_debug_logger()
-    app.run(debug=(not args.debug), host='0.0.0.0', port=env['webpanel_port'])
+
+    server = wsgiserver.WSGIServer(app, host='0.0.0.0', port=env['webpanel_port'])
+    server.start()

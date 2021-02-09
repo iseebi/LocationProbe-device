@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>端末設定</h2>
+    <form>
+        <div>
+            <h3>基本設定</h3>
+            <div class="form-group">
+                <label for="deviceName">端末名称</label>
+                <input type="text" class="form-control" id="deviceName" required="required">
+                <small id="deviceNameHelp" class="form-text text-muted">端末の名前を設定します</small>
+            </div>
+            <div class="form-group">
+                <label for="upstreamNetworkDevice">上流ネットワークデバイスの選択</label>
+                <select class="form-control" id="upstreamNetworkDevice" disabled="disabled">
+                    <option>Bluetooth PAN</option>
+                    <option>iPhone/iPadのUSBテザリング</option>
+                    <option>Wi-Fi</option>
+                </select>
+                <small id="deviceNameHelp" class="form-text text-muted">インターネットに接続するためのデバイスを選択します</small>
+            </div>
+        </div>
+
+        <div>
+            <h3>Wi-Fi AP設定</h3>
+            <div class="form-group">
+                <label for="wifiApSsid">SSID</label>
+                <input type="text" class="form-control" id="wifiApSsid" required="required">
+            </div>
+            <div class="form-group">
+                <label for="wifiApSecurityKey">SSID</label>
+                <input type="text" class="form-control" id="wifiApSecurityKey" required="required">
+            </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">設定</button>
+
+    </form>
+{% endblock %}
